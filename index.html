@@ -28,15 +28,16 @@
     .envelope { position:relative; height:clamp(250px,64vw,300px); perspective:1000px; cursor:pointer; outline:none; filter:drop-shadow(0 20px 18px #26071780); }
     .envelope:focus-visible { outline:3px solid #f6d58e; outline-offset:8px; border-radius:12px; }
     .envelope-back,.envelope-front { position:absolute; inset:0; border-radius:10px; }
-    .envelope-back { background:linear-gradient(135deg,#f6d4bf,#dc8d88); border:2px solid #d8a34d; overflow:hidden; }
+    .envelope-back { z-index:1; background:linear-gradient(135deg,#f6d4bf,#dc8d88); border:2px solid #d8a34d; overflow:hidden; }
     .envelope-back::before { content:""; position:absolute; inset:12px; border:1px solid #b57158; border-radius:5px; background:repeating-linear-gradient(45deg,transparent 0 15px,#fff3d320 15px 16px); }
+    .card-window { position:absolute; z-index:2; inset:0; overflow:hidden; pointer-events:none; transition:overflow 0s linear 1s; }
     .envelope-front { z-index:4; background:linear-gradient(145deg,#e99e9a,#c96672); clip-path:polygon(0 0,50% 57%,100% 0,100% 100%,0 100%); border-top:1px solid #f5c976; }
-    .envelope-flap { position:absolute; z-index:5; inset:0 0 auto; height:64%; transform-origin:top; transition:transform .9s cubic-bezier(.2,.75,.25,1); background:linear-gradient(155deg,#f9d8bd,#d97b7d); clip-path:polygon(0 0,100% 0,50% 100%); border-top:2px solid #e5ad55; backface-visibility:hidden; }
+    .envelope-flap { position:absolute; z-index:5; inset:0 0 auto; height:64%; transform-origin:top; transition:transform .9s cubic-bezier(.2,.75,.25,1), z-index 0s linear .9s; background:linear-gradient(155deg,#f9d8bd,#d97b7d); clip-path:polygon(0 0,100% 0,50% 100%); border-top:2px solid #e5ad55; backface-visibility:hidden; }
     .seal { position:absolute; z-index:7; left:50%; top:54%; transform:translate(-50%,-50%); width:58px; height:58px; border-radius:50%; display:grid; place-items:center; color:#ffe9b4; background:var(--maroon); border:3px double #e0aa4f; box-shadow:0 3px 8px #6d2b3c66; font-size:1.35rem; transition:opacity .35s, transform .5s; }
     .seal::before { content:"✦"; }
     .envelope-label { position:absolute; z-index:6; bottom:21px; width:100%; text-align:center; color:#fff0da; font:600 .75rem Arial,sans-serif; letter-spacing:.18em; text-transform:uppercase; }
     .hint { margin:1rem auto 0; text-align:center; color:#ffe5c2; font-size:.82rem; opacity:.9; }
-    .card { position:absolute; z-index:3; left:4%; right:4%; bottom:12%; min-height:92%; padding:1.8rem 1.25rem 1.3rem; text-align:center; background:var(--cream); border:1px solid #d2a052; box-shadow:0 8px 20px #55152b50; transform:translateY(62%); transition:transform 1s cubic-bezier(.2,.75,.25,1), z-index 0s 1s; overflow:hidden; }
+    .card { position:absolute; z-index:2; left:4%; right:4%; bottom:12%; min-height:92%; padding:1.8rem 1.25rem 1.3rem; text-align:center; background:var(--cream); border:1px solid #d2a052; box-shadow:0 8px 20px #55152b50; transform:translateY(92%); transition:transform 1.15s cubic-bezier(.2,.75,.25,1); overflow:hidden; }
     .card::before { content:""; position:absolute; inset:9px; border:1px solid #d4a451; pointer-events:none; }
     .card::after { content:"✧  ❀  ✧"; position:absolute; top:17px; left:0; right:0; color:var(--gold); font-size:1rem; letter-spacing:.35em; }
     .card-content { position:relative; z-index:1; }
@@ -52,8 +53,9 @@
     .garland { stroke:#d9a33f; stroke-width:4; stroke-dasharray:2 7; fill:none; stroke-linecap:round; }
     .footer { color:#9b5a5c; font-size:.7rem; font-style:italic; }
     .open .envelope-flap { transform:rotateX(180deg); z-index:1; }
+    .open .card-window { overflow:visible; transition-delay:0s; }
+    .open .card { transform:translateY(-72%); transition-delay:.85s; }
     .open .seal { opacity:0; transform:translate(-50%,-50%) scale(.5); }
-    .open .card { transform:translateY(-45%); z-index:6; transition:z-index 0s, transform 1s cubic-bezier(.2,.75,.25,1); }
     .open .envelope { cursor:default; }
     .open .hint { opacity:0; }
     .open .intro { opacity:.45; transform:translateY(-15px); }
@@ -71,27 +73,17 @@
     <header class="intro"><div class="eyebrow">With love &amp; blessings</div><p>A little envelope of joy awaits you</p></header>
     <section class="invitation" id="invitation">
       <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open wedding invitation">
-        <div class="card" aria-hidden="true"><div class="card-content">
+        <div class="card-window"><div class="card" aria-hidden="true"><div class="card-content">
           <div class="small">Together with their families</div>
           <h1>Sanchita <span>weds</span> Pradyumna</h1>
           <div class="date">✦ 18 · 02 · 2025 ✦</div>
           <p class="copy">Two hearts, one beautiful journey, and a lifetime of little moments to celebrate. Please join us as we begin our forever.</p>
-          <div class="couple" aria-label="A cute bride and groom illustration">
-            <svg viewBox="0 0 240 125" role="img"><g stroke="#7f1834" stroke-width="2">
-              <path d="M35 114 Q45 57 76 57 Q108 57 117 114Z" fill="#d85f72"/><path d="M42 105 Q76 80 110 105" fill="none" stroke="#f0c15a" stroke-width="4"/>
-              <circle cx="76" cy="42" r="19" fill="#f2b58f"/><path d="M57 42 Q60 8 77 13 Q98 8 97 42 Q84 26 57 42" fill="#28151d"/><path d="M58 37 Q75 17 95 37" fill="none" stroke="#e0a84b" stroke-width="4"/>
-              <circle cx="69" cy="44" r="2" fill="#3e2030"/><circle cx="84" cy="44" r="2" fill="#3e2030"/><path d="M72 52 Q76 56 80 52" fill="none"/>
-              <path d="M54 60 Q76 81 98 60" fill="none" class="garland"/><circle cx="59" cy="66" r="3" fill="#f6d47d"/><circle cx="93" cy="66" r="3" fill="#f6d47d"/>
-              <path d="M123 114 Q132 62 159 62 Q190 62 207 114Z" fill="#8e2346"/><path d="M126 94 L202 94" fill="none" stroke="#e2b553" stroke-width="4"/>
-              <circle cx="165" cy="42" r="19" fill="#c98562"/><path d="M146 38 Q148 15 166 17 Q187 13 185 41 Q169 27 146 38" fill="#251821"/><path d="M154 25 Q165 12 178 24" fill="none" stroke="#e0a84b" stroke-width="4"/>
-              <circle cx="158" cy="43" r="2" fill="#3e2030"/><circle cx="173" cy="43" r="2" fill="#3e2030"/><path d="M161 51 Q165 54 169 51" fill="none"/>
-              <path d="M143 63 Q165 82 187 63" fill="none" class="garland"/><circle cx="149" cy="68" r="3" fill="#f6d47d"/><circle cx="181" cy="68" r="3" fill="#f6d47d"/>
-              <path d="M113 71 L130 71 M112 75 L130 75" stroke="#d7a146"/><path d="M105 17 l4 7 7 1-5 5 1 7-7-3-7 3 1-7-5-5 7-1z" fill="#e1b45d" stroke="none"/>
-            </g></svg>
-          </div>
-          <div class="details"><div>Sunday<br>6:30 pm</div><div>Rosewood<br>Garden</div></div>
-          <div class="footer">Your presence is our greatest gift ♡</div>
-        </div></div>
+          <div class="couple" aria-label="A cute bride and groom illustration"><svg viewBox="0 0 240 125" role="img"><g stroke="#7f1834" stroke-width="2">
+            <path d="M35 114 Q45 57 76 57 Q108 57 117 114Z" fill="#d85f72"/><path d="M42 105 Q76 80 110 105" fill="none" stroke="#f0c15a" stroke-width="4"/><circle cx="76" cy="42" r="19" fill="#f2b58f"/><path d="M57 42 Q60 8 77 13 Q98 8 97 42 Q84 26 57 42" fill="#28151d"/><path d="M58 37 Q75 17 95 37" fill="none" stroke="#e0a84b" stroke-width="4"/><circle cx="69" cy="44" r="2" fill="#3e2030"/><circle cx="84" cy="44" r="2" fill="#3e2030"/><path d="M72 52 Q76 56 80 52" fill="none"/><path d="M54 60 Q76 81 98 60" fill="none" class="garland"/><circle cx="59" cy="66" r="3" fill="#f6d47d"/><circle cx="93" cy="66" r="3" fill="#f6d47d"/>
+            <path d="M123 114 Q132 62 159 62 Q190 62 207 114Z" fill="#8e2346"/><path d="M126 94 L202 94" fill="none" stroke="#e2b553" stroke-width="4"/><circle cx="165" cy="42" r="19" fill="#c98562"/><path d="M146 38 Q148 15 166 17 Q187 13 185 41 Q169 27 146 38" fill="#251821"/><path d="M154 25 Q165 12 178 24" fill="none" stroke="#e0a84b" stroke-width="4"/><circle cx="158" cy="43" r="2" fill="#3e2030"/><circle cx="173" cy="43" r="2" fill="#3e2030"/><path d="M161 51 Q165 54 169 51" fill="none"/><path d="M143 63 Q165 82 187 63" fill="none" class="garland"/><circle cx="149" cy="68" r="3" fill="#f6d47d"/><circle cx="181" cy="68" r="3" fill="#f6d47d"/><path d="M113 71 L130 71 M112 75 L130 75" stroke="#d7a146"/><path d="M105 17 l4 7 7 1-5 5 1 7-7-3-7 3 1-7-5-5 7-1z" fill="#e1b45d" stroke="none"/>
+          </g></svg></div>
+          <div class="details"><div>Sunday<br>6:30 pm</div><div>Rosewood<br>Garden</div></div><div class="footer">Your presence is our greatest gift ♡</div>
+        </div></div></div>
         <div class="envelope-back"></div><div class="envelope-flap"></div><div class="envelope-front"></div><div class="seal" aria-hidden="true"></div><div class="envelope-label">Tap to open</div>
       </div>
       <p class="hint">Open our little love story</p><button class="replay" id="replay" type="button">↻ View envelope again</button>
